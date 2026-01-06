@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #0e1621; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #17212b; padding: 20px; border-radius: 15px; border: 1px solid #2b5278; }
+        .btn { background: #2481cc; color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; margin-top: 20px; cursor: pointer; }
+        .status { color: #f0b90b; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>NeuroAssistant AI</h2>
+        <p>Статус: <span class="status">ОЖИДАНИЕ ПОДКЛЮЧЕНИЯ</span></p>
+        <hr>
+        <p style="text-align: left; font-size: 14px;">
+            • AI-Автоответчик: <b>OFF</b><br>
+            • Stars Cashback: <b>0%</b><br>
+            • Защита чатов: <b>Inactive</b>
+        </p>
+        <div class="btn" onclick="startSetup()">АКТИВИРОВАТЬ МОДУЛИ</div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function startSetup() {
+            alert("Для завершения активации необходимо добавить бота в список бизнес-помощников в настройках вашего аккаунта (Настройки -> Telegram Business).");
+            tg.close();
+        }
+    </script>
+</body>
+</html>
