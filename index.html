@@ -3,146 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeuroShield AI | Platinum Protection</title>
+    <title>NeuroShield AI | Platinum</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --bg: #050a0f; --card: rgba(15, 25, 35, 0.8); --blue: #00d2ff; --accent: #0088cc; --warn: #ffcc00; }
+        :root { --bg: #050a0f; --blue: #00d2ff; --dark-blue: #0088cc; --warn: #ffcc00; }
         
         body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg); 
-            color: white; margin: 0; padding: 15px; 
-            display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; overflow: hidden;
-            border: 2px solid var(--blue); /* Неоновая рамка всего приложения */
-            box-sizing: border-box;
-            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.2);
+            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; 
+            margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; overflow: hidden; border: 1px solid rgba(0, 210, 255, 0.3); box-sizing: border-box;
         }
 
-        /* Фоновый цифровой шум */
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; }
 
-        /* Контейнер щита со сканером */
-        .shield-container { position: relative; width: 130px; height: 130px; margin: 5px 0; }
-        .shield-icon { font-size: 70px; z-index: 10; position: relative; filter: drop-shadow(0 0 25px var(--blue)); }
-        
-        /* Сканирующая линия */
-        .scanner-line {
-            position: absolute; top: 0; left: 10%; width: 80%; height: 2px;
-            background: var(--blue); box-shadow: 0 0 15px var(--blue);
-            z-index: 11; animation: scan 3s infinite ease-in-out;
+        /* Центральный Радар (заполняет середину) */
+        .radar-box {
+            position: relative; width: 160px; height: 160px; margin: 10px 0;
+            display: flex; align-items: center; justify-content: center;
         }
-        @keyframes scan { 0%, 100% { top: 10%; } 50% { top: 90%; } }
+        .radar-circle {
+            position: absolute; width: 100%; height: 100%;
+            border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 50%;
+            animation: radar-rotate 4s linear infinite;
+        }
+        .radar-circle::before {
+            content: ''; position: absolute; top: 0; left: 50%; width: 50%; height: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 210, 255, 0.4));
+            border-radius: 100% 0 0 0; transform-origin: bottom left;
+        }
+        @keyframes radar-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Пульсирующие круги */
-        .pulse-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: var(--blue); border-radius: 50%; filter: blur(30px); opacity: 0.5; animation: core-pulse 2s infinite; }
-        @keyframes core-pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.2; } }
+        .shield-icon { font-size: 50px; z-index: 10; filter: drop-shadow(0 0 20px var(--blue)); }
+
+        /* Текстовый лог (заполняет пустоту под радаром) */
+        .system-log {
+            font-family: monospace; font-size: 10px; color: var(--blue);
+            width: 100%; height: 50px; text-align: center; margin: 10px 0;
+            opacity: 0.8; overflow: hidden;
+        }
 
         h2 { 
-            font-size: 26px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+            font-size: 24px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
             background: linear-gradient(90deg, #fff, var(--blue), #fff); background-size: 200%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: text-shine 4s linear infinite; margin: 10px 0;
+            animation: shine 4s linear infinite; margin: 5px 0 15px;
         }
-        @keyframes text-shine { to { background-position: 200%; } }
+        @keyframes shine { to { background-position: 200%; } }
 
-        /* Карточки с эффектом стекла */
-        .step { 
-            background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(0, 210, 255, 0.2);
-            border-radius: 15px; padding: 12px 18px; margin-bottom: 10px; width: 100%;
-            display: flex; align-items: center; box-sizing: border-box;
-            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; opacity: 0;
+        .card { 
+            background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 12px; 
+            padding: 12px; margin-bottom: 8px; width: 100%; box-sizing: border-box;
+            display: flex; align-items: center; animation: slideIn 0.5s ease-out forwards; opacity: 0;
         }
-        @keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .num { 
-            font-size: 18px; font-weight: 800; color: var(--blue); 
-            margin-right: 15px; text-shadow: 0 0 10px var(--blue);
-        }
+        .num { color: var(--blue); font-weight: 800; margin-right: 15px; font-size: 16px; }
 
-        .warn-box { 
+        .warn { 
             background: rgba(255, 204, 0, 0.05); border: 1px solid var(--warn);
-            border-radius: 15px; padding: 15px; margin: 10px 0; width: 100%; box-sizing: border-box;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
+            border-radius: 12px; padding: 12px; margin: 5px 0 15px; width: 100%; box-sizing: border-box;
         }
-        .warn-box b { color: var(--warn); display: block; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; }
-        .warn-box p { margin: 0; font-size: 13px; color: #ccc; line-height: 1.5; }
+        .warn b { color: var(--warn); font-size: 12px; display: block; margin-bottom: 4px; }
+        .warn p { margin: 0; font-size: 11px; color: #ccc; line-height: 1.4; }
 
-        /* Финальная инструкция вместо кнопки */
-        .final-instruction {
+        .final-box {
             background: linear-gradient(135deg, #001a2a, #000);
-            border: 1px dashed var(--blue); border-radius: 15px;
-            padding: 15px; width: 100%; box-sizing: border-box;
+            border: 1px dashed var(--blue); border-radius: 12px;
+            padding: 12px; width: 100%; box-sizing: border-box;
             text-align: center; margin-top: auto;
         }
-        .final-instruction span { color: var(--blue); font-weight: bold; font-size: 15px; display: block; margin-bottom: 5px; }
-        .final-instruction p { margin: 0; font-size: 12px; color: #888; }
+        .final-box span { color: var(--blue); font-weight: bold; font-size: 14px; display: block; }
+        .final-box p { margin: 4px 0 0; font-size: 11px; color: #888; }
 
-        .footer { font-size: 9px; color: #444; margin-top: 10px; letter-spacing: 2px; }
+        .footer { font-size: 8px; color: #444; margin-top: 8px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <div class="shield-container">
-        <div class="pulse-core"></div>
-        <div class="scanner-line"></div>
+    <div class="radar-box">
+        <div class="radar-circle"></div>
         <div class="shield-icon">🛡️</div>
     </div>
 
     <h2>NeuroShield AI</h2>
 
-    <div class="step" style="animation-delay: 0.1s">
+    <div class="system-log" id="log">ИНИЦИАЛИЗАЦИЯ ЗАЩИТЫ...</div>
+
+    <div class="card" style="animation-delay: 0.1s">
         <div class="num">01</div>
-        <div style="font-size: 14px;">Настройки → <span style="color:var(--blue)">Business</span></div>
+        <div style="font-size: 13px;">Настройки → <span style="color:var(--blue)">Business</span></div>
     </div>
 
-    <div class="step" style="animation-delay: 0.3s">
+    <div class="card" style="animation-delay: 0.2s">
         <div class="num">02</div>
-        <div style="font-size: 14px;">Чат-боты → Добавить <span style="color:var(--blue)">@AINeuroAssistantbot</span></div>
+        <div style="font-size: 13px;">Чат-боты → Добавить <span style="color:var(--blue)">@AINeuroAssistantbot</span></div>
     </div>
 
-    <div class="warn-box" style="animation-delay: 0.5s">
+    <div class="warn">
         <b>⚠️ КРИТИЧЕСКИЙ ДОСТУП</b>
-        <p>Для активации защиты Gifts/NFT <b>включите все ползунки</b> разрешений. ИИ-фильтр работает только при полном доступе к протоколу.</p>
+        <p>Включите <b>все ползунки</b> разрешений. Это необходимо для мгновенной фильтрации угроз и защиты ваших активов.</p>
     </div>
 
-    <div class="final-instruction">
+    <div class="final-box">
         <span>⚡ ПРИСТУПАЙТЕ К НАСТРОЙКЕ</span>
-        <p>Сверните это окно и перейдите в настройки вашего аккаунта для завершения.</p>
+        <p>Сверните это окно и перейдите в настройки Telegram для завершения активации.</p>
     </div>
 
-    <div class="footer">STARS SECURED | TERMINAL v3.0</div>
+    <div class="footer">STARS SECURED | TERMINAL v3.1</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.backgroundColor = '#050a0f';
 
-        // Эффект падающих символов
+        // Анимация лога
+        const logEntries = [
+            "CONNECTING TO NEURAL NETWORK...",
+            "ANALYZING SECURITY PROTOCOLS...",
+            "PREPARING NFT GATEWAY...",
+            "ENCRYPTING DATA STREAM...",
+            "READY FOR BUSINESS CONNECTION."
+        ];
+        let logIndex = 0;
+        setInterval(() => {
+            document.getElementById('log').innerText = logEntries[logIndex];
+            logIndex = (logIndex + 1) % logEntries.length;
+        }, 2000);
+
+        // Матричный фон (бинарный код)
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const characters = '01'.split('');
-        const fontSize = 10;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for (let i = 0; i < columns; i++) drops[i] = 1;
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(5, 10, 15, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00d2ff';
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = characters[Math.floor(Math.random() * characters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const drops = Array(Math.floor(canvas.width/10)).fill(1);
+        function draw() {
+            ctx.fillStyle = 'rgba(5, 10, 15, 0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#00d2ff'; ctx.font = '10px monospace';
+            drops.forEach((y, i) => {
+                ctx.fillText(Math.floor(Math.random()*2), i*10, y*10);
+                if(y*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
-            }
+            });
         }
-        setInterval(drawMatrix, 50);
+        setInterval(draw, 50);
     </script>
 </body>
 </html>
