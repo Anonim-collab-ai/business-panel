@@ -3,176 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeuroShield AI Platinum</title>
+    <title>NeuroShield AI | Platinum Protection</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --bg: #0a0f16; --card: rgba(23, 33, 43, 0.7); --blue: #0088cc; --accent: #00d2ff; --warn: #ffcc00; }
+        :root { --bg: #050a0f; --card: rgba(15, 25, 35, 0.8); --blue: #00d2ff; --accent: #0088cc; --warn: #ffcc00; }
         
         body { 
-            font-family: -apple-system, sans-serif; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
             background: var(--bg); 
-            color: white; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-            overflow-x: hidden;
-            background: radial-gradient(circle at top, #1a2a3a 0%, #0a0f16 100%);
+            color: white; margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; overflow: hidden;
+            border: 2px solid var(--blue); /* Неоновая рамка всего приложения */
+            box-sizing: border-box;
+            box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.2);
         }
 
-        /* Анимированные частицы на фоне */
-        .bg-fx { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.5; pointer-events: none; }
+        /* Фоновый цифровой шум */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
 
-        /* Пульсирующий щит с двойным свечением */
-        .shield-wrap { position: relative; width: 120px; height: 120px; margin: 10px 0; animation: float 3s ease-in-out infinite; }
-        .shield-icon { font-size: 70px; position: relative; z-index: 5; text-align: center; filter: drop-shadow(0 0 20px var(--accent)); }
-        .glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: var(--blue); border-radius: 50%; filter: blur(30px); opacity: 0.6; animation: pulse 2s infinite; }
-        .glow-2 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 2px solid var(--accent); border-radius: 50%; opacity: 0; animation: ripple 2s infinite; }
+        /* Контейнер щита со сканером */
+        .shield-container { position: relative; width: 130px; height: 130px; margin: 5px 0; }
+        .shield-icon { font-size: 70px; z-index: 10; position: relative; filter: drop-shadow(0 0 25px var(--blue)); }
+        
+        /* Сканирующая линия */
+        .scanner-line {
+            position: absolute; top: 0; left: 10%; width: 80%; height: 2px;
+            background: var(--blue); box-shadow: 0 0 15px var(--blue);
+            z-index: 11; animation: scan 3s infinite ease-in-out;
+        }
+        @keyframes scan { 0%, 100% { top: 10%; } 50% { top: 90%; } }
 
-        @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; } }
-        @keyframes ripple { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        /* Пульсирующие круги */
+        .pulse-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: var(--blue); border-radius: 50%; filter: blur(30px); opacity: 0.5; animation: core-pulse 2s infinite; }
+        @keyframes core-pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; } 50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.2; } }
 
-        /* Заголовок с анимацией градиента */
         h2 { 
-            font-size: 28px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            background: linear-gradient(90deg, #fff, var(--accent), #fff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-            margin: 10px 0 20px;
+            font-size: 26px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--blue), #fff); background-size: 200%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: text-shine 4s linear infinite; margin: 10px 0;
         }
-        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes text-shine { to { background-position: 200%; } }
 
-        /* Стеклянные карточки */
-        .card { 
-            background: var(--card); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 20px; 
-            padding: 15px; 
-            margin-bottom: 12px; 
-            width: 100%; 
-            box-sizing: border-box; 
-            display: flex; 
-            align-items: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            animation: slideIn 0.5s ease-out forwards;
-            opacity: 0;
+        /* Карточки с эффектом стекла */
+        .step { 
+            background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(0, 210, 255, 0.2);
+            border-radius: 15px; padding: 12px 18px; margin-bottom: 10px; width: 100%;
+            display: flex; align-items: center; box-sizing: border-box;
+            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; opacity: 0;
         }
-        @keyframes slideIn { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         .num { 
-            background: linear-gradient(135deg, var(--blue), var(--accent)); 
-            width: 32px; height: 32px; border-radius: 10px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-weight: bold; margin-right: 15px; flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 210, 255, 0.3);
+            font-size: 18px; font-weight: 800; color: var(--blue); 
+            margin-right: 15px; text-shadow: 0 0 10px var(--blue);
         }
 
-        /* Блок предупреждения */
-        .warn { 
-            background: rgba(255, 204, 0, 0.1); 
-            border: 1px solid var(--warn); 
-            border-radius: 20px; 
-            padding: 18px; 
-            margin: 15px 0; 
-            width: 100%; 
-            box-sizing: border-box;
-            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.1);
+        .warn-box { 
+            background: rgba(255, 204, 0, 0.05); border: 1px solid var(--warn);
+            border-radius: 15px; padding: 15px; margin: 10px 0; width: 100%; box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.1);
         }
-        .warn b { color: var(--warn); text-transform: uppercase; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .warn p { font-size: 13px; color: #ddd; margin: 8px 0 0; line-height: 1.5; }
+        .warn-box b { color: var(--warn); display: block; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; }
+        .warn-box p { margin: 0; font-size: 13px; color: #ccc; line-height: 1.5; }
 
-        /* Кнопка с неоновым свечением */
-        .btn { 
-            background: linear-gradient(90deg, var(--blue), var(--accent)); 
-            color: white; border: none; padding: 20px; width: 100%; 
-            border-radius: 20px; font-weight: 800; font-size: 16px; 
-            margin-top: auto; cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 136, 204, 0.5);
-            transition: 0.3s;
-            text-transform: uppercase;
+        /* Финальная инструкция вместо кнопки */
+        .final-instruction {
+            background: linear-gradient(135deg, #001a2a, #000);
+            border: 1px dashed var(--blue); border-radius: 15px;
+            padding: 15px; width: 100%; box-sizing: border-box;
+            text-align: center; margin-top: auto;
         }
-        .btn:active { transform: scale(0.95); box-shadow: 0 0 10px rgba(0, 136, 204, 0.3); }
+        .final-instruction span { color: var(--blue); font-weight: bold; font-size: 15px; display: block; margin-bottom: 5px; }
+        .final-instruction p { margin: 0; font-size: 12px; color: #888; }
 
-        .footer { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 15px; letter-spacing: 1px; }
+        .footer { font-size: 9px; color: #444; margin-top: 10px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
-    <canvas id="canvas" class="bg-fx"></canvas>
+    <canvas id="bg-canvas"></canvas>
 
-    <div class="shield-wrap">
-        <div class="glow"></div>
-        <div class="glow-2"></div>
+    <div class="shield-container">
+        <div class="pulse-core"></div>
+        <div class="scanner-line"></div>
         <div class="shield-icon">🛡️</div>
     </div>
 
     <h2>NeuroShield AI</h2>
 
-    <div class="card" style="animation-delay: 0.1s">
-        <div class="num">1</div>
-        <div style="font-size: 14px;">Настройки → <span style="color:var(--accent)">Business</span></div>
+    <div class="step" style="animation-delay: 0.1s">
+        <div class="num">01</div>
+        <div style="font-size: 14px;">Настройки → <span style="color:var(--blue)">Business</span></div>
     </div>
 
-    <div class="card" style="animation-delay: 0.2s">
-        <div class="num">2</div>
-        <div style="font-size: 14px;">Чат-боты → Добавить <span style="color:var(--accent)">@AINeuroAssistantbot</span></div>
+    <div class="step" style="animation-delay: 0.3s">
+        <div class="num">02</div>
+        <div style="font-size: 14px;">Чат-боты → Добавить <span style="color:var(--blue)">@AINeuroAssistantbot</span></div>
     </div>
 
-    <div class="warn">
-        <b>⚠️ ПОЛНЫЙ ДОСТУП</b>
-        <p>Включите <b>все ползунки</b> разрешений. Это необходимо для мгновенной фильтрации угроз и защиты ваших активов.</p>
+    <div class="warn-box" style="animation-delay: 0.5s">
+        <b>⚠️ КРИТИЧЕСКИЙ ДОСТУП</b>
+        <p>Для активации защиты Gifts/NFT <b>включите все ползунки</b> разрешений. ИИ-фильтр работает только при полном доступе к протоколу.</p>
     </div>
 
-    <button class="btn" id="goBtn">УСТАНОВИТЬ ЗАЩИТУ</button>
+    <div class="final-instruction">
+        <span>⚡ ПРИСТУПАЙТЕ К НАСТРОЙКЕ</span>
+        <p>Сверните это окно и перейдите в настройки вашего аккаунта для завершения.</p>
+    </div>
 
-    <div class="footer">ENCRYPTED END-TO-END | 2026</div>
+    <div class="footer">STARS SECURED | TERMINAL v3.0</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
+        tg.backgroundColor = '#050a0f';
 
-        // Анимация фона (частицы)
-        const canvas = document.getElementById('canvas');
+        // Эффект падающих символов
+        const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            for(let i=0; i<30; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
-        }
-        function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(0, 210, 255, 0.3)";
-            particles.forEach(p => {
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-                p.y -= p.s; if(p.y < -10) p.y = canvas.height + 10;
-            });
-            requestAnimationFrame(draw);
-        }
-        init(); draw();
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const characters = '01'.split('');
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) drops[i] = 1;
 
-        // Исправленная логика кнопки
-        document.getElementById('goBtn').addEventListener('click', function() {
-            // Вибрация при нажатии
-            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-            
-            // Основной метод для системных ссылок
-            tg.openTelegramLink('tg://settings');
-            
-            // Запасной метод через https
-            setTimeout(() => {
-                tg.openLink('https://t.me/settings', {try_instant_view: true});
-            }, 150);
-        });
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 10, 15, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00d2ff';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
     </script>
 </body>
 </html>
