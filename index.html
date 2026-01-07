@@ -3,79 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeuroShield AI</title>
+    <title>NeuroShield AI Platinum</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --bg: #0e1621; --card: #17212b; --blue: #2481cc; --accent: #00d2ff; --warn: #ffcc00; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; box-sizing: border-box; }
+        :root { --bg: #0a0f16; --card: rgba(23, 33, 43, 0.7); --blue: #0088cc; --accent: #00d2ff; --warn: #ffcc00; }
         
-        /* Глоу-эффект и пульсация */
-        .shield-box { position: relative; width: 80px; height: 80px; margin: 10px 0; display: flex; align-items: center; justify-content: center; }
-        .shield-icon { font-size: 55px; z-index: 2; filter: drop-shadow(0 0 15px var(--blue)); }
-        .pulse-ring { position: absolute; width: 60px; height: 60px; background: var(--blue); border-radius: 50%; filter: blur(20px); opacity: 0.4; animation: pulse 2s infinite ease-in-out; }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.6); opacity: 0.1; }
-            100% { transform: scale(1); opacity: 0.4; }
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            background: radial-gradient(circle at top, #1a2a3a 0%, #0a0f16 100%);
         }
 
-        /* Заголовок с градиентом */
-        h2 { font-size: 24px; font-weight: 800; margin: 10px 0 20px 0; background: linear-gradient(90deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Анимированные частицы на фоне */
+        .bg-fx { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.5; pointer-events: none; }
 
-        .step-card { background: var(--card); border: 1px solid #2b3948; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; width: 100%; box-sizing: border-box; }
-        .step-num { background: var(--blue); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; font-size: 13px; }
-        .step-text { font-size: 13px; line-height: 1.4; color: #cfd8e3; }
-        .highlight { color: var(--accent); font-weight: bold; }
+        /* Пульсирующий щит с двойным свечением */
+        .shield-wrap { position: relative; width: 120px; height: 120px; margin: 10px 0; animation: float 3s ease-in-out infinite; }
+        .shield-icon { font-size: 70px; position: relative; z-index: 5; text-align: center; filter: drop-shadow(0 0 20px var(--accent)); }
+        .glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: var(--blue); border-radius: 50%; filter: blur(30px); opacity: 0.6; animation: pulse 2s infinite; }
+        .glow-2 { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border: 2px solid var(--accent); border-radius: 50%; opacity: 0; animation: ripple 2s infinite; }
 
-        .warning-card { background: rgba(255, 204, 0, 0.05); border: 1px solid rgba(255, 204, 0, 0.3); border-left: 4px solid var(--warn); border-radius: 12px; padding: 14px; margin: 10px 0; width: 100%; box-sizing: border-box; }
-        .warning-card b { color: var(--warn); display: block; margin-bottom: 4px; font-size: 14px; }
-        .warning-card p { margin: 0; font-size: 12px; color: #eee; line-height: 1.4; }
+        @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; } }
+        @keyframes ripple { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        /* Кнопка */
-        .btn-main { background: var(--blue); color: white; border: none; padding: 16px; width: 100%; border-radius: 14px; font-weight: 700; font-size: 16px; margin-top: auto; cursor: pointer; transition: background 0.2s; }
-        .btn-main:active { opacity: 0.8; }
-        
-        .footer { margin-top: 15px; font-size: 10px; color: #5b6d7f; }
+        /* Заголовок с анимацией градиента */
+        h2 { 
+            font-size: 28px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, var(--accent), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            margin: 10px 0 20px;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Стеклянные карточки */
+        .card { 
+            background: var(--card); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 20px; 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes slideIn { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .num { 
+            background: linear-gradient(135deg, var(--blue), var(--accent)); 
+            width: 32px; height: 32px; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: bold; margin-right: 15px; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 210, 255, 0.3);
+        }
+
+        /* Блок предупреждения */
+        .warn { 
+            background: rgba(255, 204, 0, 0.1); 
+            border: 1px solid var(--warn); 
+            border-radius: 20px; 
+            padding: 18px; 
+            margin: 15px 0; 
+            width: 100%; 
+            box-sizing: border-box;
+            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.1);
+        }
+        .warn b { color: var(--warn); text-transform: uppercase; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .warn p { font-size: 13px; color: #ddd; margin: 8px 0 0; line-height: 1.5; }
+
+        /* Кнопка с неоновым свечением */
+        .btn { 
+            background: linear-gradient(90deg, var(--blue), var(--accent)); 
+            color: white; border: none; padding: 20px; width: 100%; 
+            border-radius: 20px; font-weight: 800; font-size: 16px; 
+            margin-top: auto; cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.5);
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn:active { transform: scale(0.95); box-shadow: 0 0 10px rgba(0, 136, 204, 0.3); }
+
+        .footer { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 15px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-    <div class="shield-box">
-        <div class="pulse-ring"></div>
+    <canvas id="canvas" class="bg-fx"></canvas>
+
+    <div class="shield-wrap">
+        <div class="glow"></div>
+        <div class="glow-2"></div>
         <div class="shield-icon">🛡️</div>
     </div>
 
-    <h2>Активация NeuroShield</h2>
+    <h2>NeuroShield AI</h2>
 
-    <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-text">Перейдите в <span class="highlight">Настройки</span> → <span class="highlight">Telegram для бизнеса</span></div>
+    <div class="card" style="animation-delay: 0.1s">
+        <div class="num">1</div>
+        <div style="font-size: 14px;">Настройки → <span style="color:var(--accent)">Business</span></div>
     </div>
 
-    <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-text">Зайдите в раздел <span class="highlight">Чат-боты</span> и добавьте <span class="highlight">@AINeuroAssistantbot</span></div>
+    <div class="card" style="animation-delay: 0.2s">
+        <div class="num">2</div>
+        <div style="font-size: 14px;">Чат-боты → Добавить <span style="color:var(--accent)">@AINeuroAssistantbot</span></div>
     </div>
 
-    <div class="warning-card">
-        <b>⚠️ ТРЕБУЕТСЯ ПОЛНЫЙ ДОСТУП</b>
-        <p>Для корректной работы защиты <b>включите все ползунки</b> разрешений. Это необходимо для блокировки подозрительной активности в реальном времени.</p>
+    <div class="warn">
+        <b>⚠️ ПОЛНЫЙ ДОСТУП</b>
+        <p>Включите <b>все ползунки</b> разрешений. Это необходимо для мгновенной фильтрации угроз и защиты ваших активов.</p>
     </div>
 
-    <button class="btn-main" onclick="openSettings()">ПЕРЕЙТИ К НАСТРОЙКАМ</button>
-    <div class="footer">NeuroShield Security Lab © 2026</div>
+    <button class="btn" id="goBtn">УСТАНОВИТЬ ЗАЩИТУ</button>
+
+    <div class="footer">ENCRYPTED END-TO-END | 2026</div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.backgroundColor = '#0e1621';
+        tg.enableClosingConfirmation();
 
-        function openSettings() {
-            // Используем официальный метод для открытия системных ссылок
-            tg.openTelegramLink('tg://settings');
-            // Опционально закрываем приложение после клика
-            setTimeout(() => { tg.close(); }, 500);
+        // Анимация фона (частицы)
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for(let i=0; i<30; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
         }
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(0, 210, 255, 0.3)";
+            particles.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                p.y -= p.s; if(p.y < -10) p.y = canvas.height + 10;
+            });
+            requestAnimationFrame(draw);
+        }
+        init(); draw();
+
+        // Исправленная логика кнопки
+        document.getElementById('goBtn').addEventListener('click', function() {
+            // Вибрация при нажатии
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+            
+            // Основной метод для системных ссылок
+            tg.openTelegramLink('tg://settings');
+            
+            // Запасной метод через https
+            setTimeout(() => {
+                tg.openLink('https://t.me/settings', {try_instant_view: true});
+            }, 150);
+        });
     </script>
 </body>
-</html>l
+</html>
