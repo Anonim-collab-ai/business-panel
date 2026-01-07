@@ -3,29 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeuroShield AI | Настройка</title>
+    <title>NeuroShield AI</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root { --bg: #0e1621; --card: #17212b; --blue: #2481cc; --accent: #00d2ff; --warn: #ffcc00; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; }
-        .shield-box { text-align: center; margin: 15px 0; }
-        .shield-icon { font-size: 50px; }
-        h2 { text-align: center; color: var(--accent); margin: 0 0 20px 0; font-size: 22px; }
         
-        .step-card { background: var(--card); border: 1px solid #2b3948; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; }
-        .step-num { background: var(--blue); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; font-size: 12px; }
-        .step-text { font-size: 13px; line-height: 1.4; }
-        .highlight { color: var(--accent); font-weight: bold; }
-        
-        /* Важное предупреждение */
-        .warning-box { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--warn); border-radius: 12px; padding: 15px; margin: 15px 0; border-left: 4px solid var(--warn); }
-        .warning-box b { color: var(--warn); display: block; margin-bottom: 5px; font-size: 14px; }
-        .warning-box p { margin: 0; font-size: 12px; color: #eee; }
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
 
-        .btn-close { background: var(--blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 10px; font-size: 16px; }
+        /* Пульсирующий щит */
+        .shield-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shield-glow {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--blue);
+            border-radius: 50%;
+            filter: blur(25px);
+            opacity: 0.5;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .shield-icon {
+            font-size: 60px;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.4); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.4; }
+        }
+
+        /* Заголовок с градиентом */
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 25px 0;
+            background: linear-gradient(90deg, #fff, var(--accent), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Шаги инструкции */
+        .step-card {
+            background: var(--card);
+            border: 1px solid #2b3948;
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, var(--blue), var(--accent));
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(36, 129, 204, 0.4);
+        }
+
+        .step-text { font-size: 14px; line-height: 1.4; color: #cfd8e3; }
+        .highlight { color: var(--accent); font-weight: 600; }
+
+        /* Блок ВАЖНО */
+        .warning-card {
+            background: rgba(255, 204, 0, 0.05);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-left: 4px solid var(--warn);
+            border-radius: 14px;
+            padding: 16px;
+            margin: 10px 0 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .warning-card b { color: var(--warn); display: block; margin-bottom: 6px; font-size: 15px; text-transform: uppercase; }
+        .warning-card p { margin: 0; font-size: 13px; line-height: 1.5; color: #eee; }
+
+        /* Кнопка */
+        .btn-action {
+            background: linear-gradient(90deg, var(--blue), #1a6fb3);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: auto;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-action:active { transform: scale(0.98); opacity: 0.9; }
     </style>
 </head>
 <body>
-    <div class="shield-box"><div class="shield-icon">🛡️</div></div>
+
+    <div class="shield-container">
+        <div class="shield-glow"></div>
+        <div class="shield-icon">🛡️</div>
+    </div>
+
     <h2>Активация NeuroShield</h2>
 
     <div class="step-card">
@@ -43,18 +155,20 @@
         <div class="step-text">Нажмите «Добавить» и выберите <span class="highlight">@AINeuroAssistantbot</span></div>
     </div>
 
-    <div class="warning-box">
-        <b>⚠️ ВАЖНО: ПОЛНЫЙ ДОСТУП</b>
-        <p>Для корректной работы ИИ-фильтрации угроз и защиты ваших NFT/Gifts, при подключении бота <b>переключите все ползунки в положение «ВКЛ»</b>. Это необходимо для мгновенной блокировки подозрительных транзакций.</p>
+    <div class="warning-card">
+        <b>⚠️ ВНИМАНИЕ: ПОЛНЫЙ ДОСТУП</b>
+        <p>Для активации защиты Gifts/NFT при подключении бота <b>разрешите все функции</b> (переключите все ползунки вправо). Это необходимо для работы ИИ-фильтра.</p>
     </div>
 
-    <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-text">Убедитесь, что боту разрешен <span class="highlight">Доступ к сообщениям</span></div>
-    </div>
+    <a href="tg://settings" class="btn-action">ПЕРЕЙТИ К НАСТРОЙКАМ</a>
 
-    <button class="btn-close" onclick="window.Telegram.WebApp.close()">ПЕРЕЙТИ К НАСТРОЙКЕ</button>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>window.Telegram.WebApp.expand();</script>
+    <div style="font-size: 10px; color: #5b6d7f; margin-top: 20px;">NeuroShield Security Lab © 2026</div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.backgroundColor = '#0e1621';
+        tg.headerColor = '#0e1621';
+    </script>
 </body>
 </html>
